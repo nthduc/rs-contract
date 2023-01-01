@@ -1,64 +1,34 @@
 // Find all our documentation at https://docs.near.org
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{log, near_bindgen};
+use near_sdk::{ near_bindgen, AccountId, env};
+use near_sdk::collections::LookupMap;
 
-// Define the default message
-const DEFAULT_MESSAGE: &str = "Hello";
-
-// Define the contract structure
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize)]
-pub struct Contract {
-    message: String,
+#[derive(BorshDeserialize, BorshSerialize)] // Borsh -> Nhị phân , Serialize -> Giải mã 
+pub struct FungibleToken {
+    user_accounts: LookupMap<AccountId, u128>,
+    total_supply: u128,
 }
 
-// Define the default, which automatically initializes the contract
-impl Default for Contract{
-    fn default() -> Self{
-        Self{message: DEFAULT_MESSAGE.to_string()}
+impl Default for FungibleToken {
+    fn default() -> Self {
+        let mut contract: FungibleToken = FungibleToken {
+            user_accounts: LookupMap::new(b'm'),
+            total_supply: 100000,
+        };
+        let account_id = env::signer_account_id();
+        contract.user_accounts.insert(&account_id, &contract.total_supply);
+        return contract;
     }
 }
 
-// Implement the contract structure
 #[near_bindgen]
-impl Contract {
-    // Public method - returns the greeting saved, defaulting to DEFAULT_MESSAGE
-    pub fn get_greeting(&self) -> String {
-        return self.message.clone();
+impl FungibleToken {
+    pub fn get_total_token(&self) -> u128{
+        return self.total_supply.clone();
     }
 
-    // Public method - accepts a greeting, such as "howdy", and records it
-    pub fn set_greeting(&mut self, message: String) {
-        log!("Saving greeting {}", message);
-        self.message = message;
-    }
-}
-
-/*
- * The rest of this file holds the inline tests for the code above
- * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
- */
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn get_default_greeting() {
-        let contract = Contract::default();
-        // this test did not call set_greeting so should return the default "Hello" greeting
-        assert_eq!(
-            contract.get_greeting(),
-            "Hello".to_string()
-        );
-    }
-
-    #[test]
-    fn set_then_get_greeting() {
-        let mut contract = Contract::default();
-        contract.set_greeting("howdy".to_string());
-        assert_eq!(
-            contract.get_greeting(),
-            "howdy".to_string()
-        );
+    pub fn get_token_account(&self, account_id: AccountId) -> Option<u128> {
+        return self.user_accounts.get(&account_id);
     }
 }
