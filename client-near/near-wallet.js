@@ -6,13 +6,24 @@ import { providers } from 'near-api-js';
 // wallet selector UI
 import '@near-wallet-selector/modal-ui/styles.css';
 import { setupModal } from '@near-wallet-selector/modal-ui';
-import LedgerIconUrl from '@near-wallet-selector/ledger/assets/ledger-icon.png';
-import MyNearIconUrl from '@near-wallet-selector/my-near-wallet/assets/my-near-wallet-icon.png';
+import { setupCoin98Wallet } from "@near-wallet-selector/coin98-wallet";
+import { setupNearFi } from "@near-wallet-selector/nearfi";
+import { setupHereWallet } from "@near-wallet-selector/here-wallet";
+import { setupSender } from "@near-wallet-selector/sender";
+import { setupNearWallet } from "@near-wallet-selector/near-wallet";
+import { setupMathWallet } from "@near-wallet-selector/math-wallet";
+import { setupNightly } from "@near-wallet-selector/nightly";
+import { setupMeteorWallet } from "@near-wallet-selector/meteor-wallet";
+import { setupWelldoneWallet } from "@near-wallet-selector/welldone-wallet";
+import { setupNeth } from "@near-wallet-selector/neth";
+import { setupOptoWallet } from "@near-wallet-selector/opto-wallet";
+
 
 // wallet selector options
 import { setupWalletSelector } from '@near-wallet-selector/core';
 import { setupLedger } from '@near-wallet-selector/ledger';
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
+
 
 const THIRTY_TGAS = '30000000000000';
 const NO_DEPOSIT = '0';
@@ -30,15 +41,28 @@ export class Wallet {
     // Omitting the accountId will result in the user being
     // asked to sign all transactions.
     this.createAccessKeyFor = createAccessKeyFor
-    this.network = 'testnet'
+    this.network = network
   }
 
   // To be called when the website loads
   async startUp() {
     this.walletSelector = await setupWalletSelector({
       network: this.network,
-      modules: [setupMyNearWallet({ iconUrl: MyNearIconUrl }),
-      setupLedger({ iconUrl: LedgerIconUrl })],
+      modules: [
+        setupMyNearWallet(),
+        setupLedger(),
+        setupCoin98Wallet(),
+        setupNearFi(),
+        setupHereWallet(),
+        setupSender(),
+        setupNearWallet(),
+        setupMathWallet(),
+        setupNightly(),
+        setupMeteorWallet(),
+        setupWelldoneWallet(),
+        setupNeth(),
+        setupOptoWallet()
+    ],
     });
 
     const isSignedIn = this.walletSelector.isSignedIn();
