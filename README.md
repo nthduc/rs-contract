@@ -4,7 +4,6 @@
         <strong>Near</strong>
     </h1>
 </div>
-==================
 
 This app was initialized with [create-near-app]
 

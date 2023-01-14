@@ -19,11 +19,11 @@ function Web3Provider({ children }) {
     useEffect(() => {
 
         const loadProvider = async () => {
-            const wallet = await new Wallet({
+            const wallet = new Wallet({
                 createAccessKeyFor: CONTRACT_ID,
                 network: "testnet",
             });
-            const contract = await new Contract({
+            const contract = new Contract({
                 contractId: CONTRACT_ID,
                 walletToUse: wallet
             });
