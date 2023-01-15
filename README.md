@@ -9,7 +9,6 @@ This app was initialized with [create-near-app]
 
 
 Quick Start
-===========
 
 If you haven't installed dependencies during setup:
 
